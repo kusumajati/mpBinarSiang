@@ -1,7 +1,7 @@
 require('dotenv').config()
 var express = require('express')
 var app = express()
-var PORT = 3030
+var PORT = process.env.PORT || 3030
 const bodyParser = require('body-parser')
 const config_server = process.env.DB_ATLAS_MONGO || process.env.DB_LOCAL_MONGO
 
