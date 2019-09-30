@@ -12,7 +12,10 @@ const mongoose = require('mongoose');
 mongoose.connect(config_server, {useNewUrlParser: true, useUnifiedTopology: true});
 
 //CORS
-app.use(cors())
+app.use(cors({
+    origin:['http://localhost:3000', 'http://localhost:3001']
+}))
+
 
 app.get('/',(req, res)=>{
     res.send('this is mp-binar-app')
