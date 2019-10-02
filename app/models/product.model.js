@@ -16,7 +16,8 @@ var productSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    reviews:[{type:mongoose.Schema.Types.ObjectId, ref:'Review'}]
+    reviews:[{type:mongoose.Schema.Types.ObjectId, ref:'Review'}],
+    image:{type:String}
 })
 
 
