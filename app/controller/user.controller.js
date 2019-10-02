@@ -56,7 +56,7 @@ exports.userShow = (req, res) => {
     User.findById(req.params.id)
     .populate({
         path:'products',
-        select: ['name', 'price']
+        select: ['name', 'price','image']
     })
         .then(user => {
             if (user) {
