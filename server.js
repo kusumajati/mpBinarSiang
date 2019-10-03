@@ -1,4 +1,5 @@
 require('dotenv').config()
+var path = require('path')
 var cors = require('cors')
 var express = require('express')
 var app = express()
@@ -11,11 +12,15 @@ const config_server = process.env.DB_ATLAS_MONGO || process.env.DB_LOCAL_MONGO
 const mongoose = require('mongoose');
 mongoose.connect(config_server, {useNewUrlParser: true, useUnifiedTopology: true});
 
+//body parser
+app.use(bodyParser.json())
+
 //CORS
 app.use(cors({
     origin:['http://localhost:3000', 'http://localhost:3001']
 }))
 
+app.use(express.static('public'))
 
 app.get('/',(req, res)=>{
     res.send('this is mp-binar-app')
@@ -24,13 +29,7 @@ app.get('/',(req, res)=>{
    
 })
 
-app.post('/request', (req,res)=>{
-    res.send({
-        query: req.query.apaaja
-    })
-})
 
-app.use(bodyParser.json())
 
 //API
 require('./app/routes/user.routes')(app)
