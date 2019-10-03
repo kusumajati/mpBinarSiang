@@ -27,7 +27,7 @@ exports.productCreate = (req, res) => {
 }
 
 exports.productShowAll = (req, res) => {
-    Product.find({}).then(products => {
+    Product.find().then(products => {
         res.json({
             success: true,
             message: "products retrieved",
@@ -49,6 +49,10 @@ exports.productShow = (req, res) => {
     .populate({
         path:'user',
         select:"username"
+    })
+    .populate({
+        path:'reviews',
+        populate:{path:'user', select:'username'}
     })
     .then(product => {
         res.json({
