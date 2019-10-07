@@ -3,6 +3,7 @@ var path = require('path')
 var cors = require('cors')
 var express = require('express')
 var app = express()
+var Product = require('./app/models/product.model')
 var PORT = process.env.PORT || 3030
 const bodyParser = require('body-parser')
 const config_server = process.env.DB_ATLAS_MONGO || process.env.DB_LOCAL_MONGO
@@ -23,11 +24,22 @@ app.use(cors({
 app.use(express.static('public'))
 
 app.get('/',(req, res)=>{
-    res.send('this is mp-binar-app')
+    if (req.query.search) {
+        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+        Product.find({ "name": regex }, function(err, products) {
+            if(err) {
+                console.log(err);
+            } else {
+               res.json(products);
+            }
+        }); 
+     }else{
+        res.send('this is mp-binar-app') 
 
-
-   
+     }
 })
+
+
 
 
 
@@ -35,6 +47,10 @@ app.get('/',(req, res)=>{
 require('./app/routes/user.routes')(app)
 require('./app/routes/products.routes')(app)
 require('./app/routes/review.routes')(app)
+
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
 
 app.listen(PORT, ()=>{
     console.log('Litening on port '+PORT)
