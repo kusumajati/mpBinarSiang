@@ -1,6 +1,6 @@
 require('dotenv').config()
 var User = require('../models/user.model')
-// const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 var Response = require('../middleware/Response')
 var jwt = require('jsonwebtoken');
 
@@ -10,7 +10,7 @@ exports.userCreate = (req, res) => {
 
     var newUser = new User({
         username: req.body.username,
-        // password: bcrypt.hashSync(req.body.password, parseInt(process.env.BCRYPT_SALT)),
+        password: bcrypt.hashSync(req.body.password, parseInt(process.env.BCRYPT_SALT)),
         email: req.body.email,
         image: req.body.image,
         reviews: [req.body.reviews],
@@ -70,7 +70,7 @@ exports.userDelete = (req, res) => {
 exports.userUpdate = (req, res) => {
     var updateUser = req.body
     if (updateUser.password) {
-        // updateUser.password = bcrypt.hashSync(req.body.password, 10)
+        updateUser.password = bcrypt.hashSync(req.body.password, 10)
     }
     User.findByIdAndUpdate(req.params.id, {
         $set: updateUser
@@ -89,7 +89,7 @@ Response(res,true,'user updated', updated)
 exports.userLogin = (req, res) => {
     User.findOne({ username: req.body.username })
         .then(user => {
-            // var hash = bcrypt.compareSync(req.body.password, user.password)
+            var hash = bcrypt.compareSync(req.body.password, user.password)
             if (hash) {
                 var token = jwt.sign({
                     username: user.username,
