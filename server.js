@@ -34,7 +34,7 @@ require('./app/routes/review.routes')(app)
 
 
 
-app.listen(PORT, () => {
+app.listen(process.env.PORT, () => {
     console.log('Litening on port ' + PORT)
 })
 
