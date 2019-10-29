@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # mpbinar
 <h3>Autentikasi</h3>
 <ol>
@@ -16,3 +17,8 @@
 </ol>
 
 
+=======
+# mpBinarSiang
+
+test
+>>>>>>> 6c6667eb216478367b080fdb628a02bb89da97ab
