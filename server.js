@@ -11,18 +11,16 @@ const config_server = process.env.DB_ATLAS_MONGO || process.env.DB_LOCAL_MONGO
 
 
 const mongoose = require('mongoose');
-mongoose.connect(config_server, {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.connect(config_server, { useNewUrlParser: true, useUnifiedTopology: true });
 
 //body parser
 app.use(bodyParser.json())
 
 //CORS
-app.use(cors({
-    origin:['http://localhost:3000', 'http://localhost:3001']
-}))
+app.use(cors())
 
-app.get('/',(req, res)=>{
-res.send('hi')
+app.get('/', (req, res) => {
+    res.send('hi')
 })
 
 
@@ -36,7 +34,7 @@ require('./app/routes/review.routes')(app)
 
 
 
-app.listen(PORT, ()=>{
-    console.log('Litening on port '+PORT)
+app.listen(PORT, () => {
+    console.log('Litening on port ' + PORT)
 })
 
