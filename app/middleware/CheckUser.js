@@ -5,10 +5,7 @@ exports.create = (req,res, next)=>{
     User.findOne({username: req.body.username})
     .then(user=>{
         if(user){
-            res.json({
-                success:false,
-                message: "username is taken",
-            })
+            Response(res,false,"username is taken", null, 400)
         }else{
             next()
         }
@@ -16,11 +13,7 @@ exports.create = (req,res, next)=>{
     })
     .catch(err=>{
         
-        res.json({
-            success:false,
-            message: "cannot create user",
-            data:err
-        })
+        Response(res,false,'error from CheckUser middleware',err, 500)
     })
 }
 
@@ -31,7 +24,7 @@ if(String(req.username)=== String(req.body.username)){
     User.findOne({username: req.body.username})
     .then(user=>{
         if(user){
-            Response(res, false, 'username is taken')
+            Response(res,false,"username is taken", null, 400)
 
         }
         else{
@@ -41,11 +34,8 @@ if(String(req.username)=== String(req.body.username)){
     })
     .catch(err=>{
         
-        res.json({
-            success:false,
-            message: "cannot create user",
-            data:err
-        })
+        Response(res,false,'error from CheckUser middleware',err, 500)
+
     })
 }
     

@@ -10,7 +10,7 @@ exports.userCreate = (req, res) => {
 
     var newUser = new User({
         username: req.body.username,
-        password: bcrypt.hashSync(req.body.password, parseInt( process.env.BCRYPT_SALT)),
+        password: bcrypt.hashSync(req.body.password, parseInt(process.env.BCRYPT_SALT)),
         email: req.body.email,
         image: req.body.image,
         reviews: [req.body.reviews],
@@ -18,17 +18,9 @@ exports.userCreate = (req, res) => {
     })
     newUser.save()
         .then(createdUser => {
-            res.json({
-                success: true,
-                message: "user created",
-                data: createdUser
-            });
+            Response(res, true, 'user created', createdUser, 201)
         }).catch(err => {
-            res.json({
-                success: false,
-                message: "cannot create user",
-                data: err
-            });
+            Response(res, false, 'error from create handler', err, 500)
         })
 
 }
@@ -37,75 +29,40 @@ exports.userCreate = (req, res) => {
 exports.userShowAll = (req, res) => {
 
     User.find({})
-    .then(alluser => {
-        res.json({
-            success: true,
-            message: "all user is retrieved",
-            data: alluser
-        });
-    }).catch(err => {
-        res.json({
-            success: false,
-            message: "cannot get all user",
-            data: err
-        });
-    })
+        .then(alluser => {
+            Response(res, true, 'all users retrieved', alluser)
+        }).catch(err => {
+            Response(res, false, 'error from userShowAll handler', err, 500)
+        })
 }
 
 exports.userShow = (req, res) => {
     User.findById(req.params.id)
-    .populate({
-        path:'products',
-        select: ['name', 'price','image']
-    })
+        .populate({
+            path: 'products',
+            select: ['name', 'price', 'image']
+        })
         .then(user => {
             if (user) {
-                res.json({
-                    success: true,
-                    message: "user is retrieved",
-                    data: user
-                });
+                Response(res, true, 'retrieved user', user)
             } else {
-                res.json({
-                    success: false,
-                    message: "cannot get user",
-                    data: err
-                });
+                Response(res, false, 'user not found', null, 404)
             }
 
         })
         .catch(err => {
-            res.json({
-                success: false,
-                message: "cannot get user",
-                data: err
-            });
+            Response(res, false, 'error from userShow handler', 500)
         })
 }
 
 exports.userDelete = (req, res) => {
     User.findByIdAndRemove(req.params.id, { useFindAndModify: false })
         .then(data => {
-            if (user) {
-                res.json({
-                    success: true,
-                    message: 'User deleted',
-                    data: data
-                })
-            } else {
-                res.json({
-                    success: false,
-                    message: "cannot delete user",
-                    data: err
-                });
-            }
+
+                Response(res, true, 'delete user', data, 200)
 
         }).catch(err => {
-            res.json({
-                success: false,
-                message: "cannot delete user",
-                data: err
-            });
+            Response(res, false, 'user not found', err, 500)
         })
 
 }
@@ -122,38 +79,30 @@ exports.userUpdate = (req, res) => {
             useFindAndModify: false
         })
         .then(updated => {
-            res.json({
-                success: true,
-                message: "user updated",
-                data: updated
-            })
+Response(res,true,'user updated', updated)
         })
         .catch(err => {
-            res.json({
-                success: false,
-                message: "cannot update user",
-                data: err
-            })
+            Response(res,false,'error from update handler', err, 500)
         })
 }
 
 exports.userLogin = (req, res) => {
     User.findOne({ username: req.body.username })
         .then(user => {
-         var hash =   bcrypt.compareSync(req.body.password, user.password)
-            if(hash){
+            var hash = bcrypt.compareSync(req.body.password, user.password)
+            if (hash) {
                 var token = jwt.sign({
                     username: user.username,
-                    id:user._id
+                    id: user._id
                 }, process.env.JWT_SECRET);
 
-                Response(res, true, "your logged in", {token:token,userId:user._id})
-            }else{
-                Response(res, false, "wrong password")
+                Response(res, true, "your logged in", { token: token, userId: user._id })
+            } else {
+                Response(res, false, "wrong password", null, 400)
             }
 
         })
         .catch(err => {
-            Response(res, false, "cannot log in", err)
+            Response(res, false, "cannot log in", err, 500)
         })
 }

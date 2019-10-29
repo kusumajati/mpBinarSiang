@@ -7,7 +7,7 @@ module.exports = (req,res, next) =>{
     if(req.headers.authorization){
         jwt.verify(req.headers.authorization, jwt_pass, (err,decoded)=>{
             if(err){
-                Response(res,false,"cannot decode",err)
+                Response(res,false,"error from jwt verify",err, 500)
 
             }else{
                 // res.send(decoded)
@@ -20,17 +20,16 @@ module.exports = (req,res, next) =>{
                         
                         next()
                     }else{
-                        Response(res,false,"user not found")
+                        Response(res,false,"user not found",null,404)
                     }
                 }).catch(errUser=>{
-                    Response(res,false,"something went wrong from Auth",errUser)
-                    console.log(req.userId)
+                    Response(res,false,"error from Authentication",errUser, 500)
                 })
             }
             
         })
     }else{
-        Response(res, false, "token is required")
+        Response(res, false, "token is required", null, 401)
     }
 
 }

@@ -21,22 +21,8 @@ app.use(cors({
     origin:['http://localhost:3000', 'http://localhost:3001']
 }))
 
-app.use(express.static('public'))
-
 app.get('/',(req, res)=>{
-    if (req.query.search) {
-        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
-        Product.find({ "name": regex }, function(err, products) {
-            if(err) {
-                console.log(err);
-            } else {
-               res.json(products);
-            }
-        }); 
-     }else{
-        res.send('this is mp-binar-app') 
-
-     }
+res.send('hi')
 })
 
 
@@ -48,9 +34,7 @@ require('./app/routes/user.routes')(app)
 require('./app/routes/products.routes')(app)
 require('./app/routes/review.routes')(app)
 
-function escapeRegex(text) {
-    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-};
+
 
 app.listen(PORT, ()=>{
     console.log('Litening on port '+PORT)
